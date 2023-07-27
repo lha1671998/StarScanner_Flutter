@@ -17,4 +17,14 @@ class AppTextStyles {
       fontSize: 14, fontFamily: 'Inter-Light', color: AppColors.white);
   static const mediumWhite14 = TextStyle(
       fontSize: 14, fontFamily: 'Inter-Medium', color: AppColors.white);
+  static const mediumTeal16 = TextStyle(
+      fontSize: 16, fontFamily: 'Inter-Medium', color: AppColors.tealPrimary);
+  static const semiBoldGrey18 = TextStyle(
+      fontSize: 18, fontFamily: 'Inter-SemiBold', color: AppColors.grey);
+  static const regularGrey16 = TextStyle(
+      fontSize: 16, fontFamily: 'Inter-Regular', color: AppColors.grey);
+  static const regularGrey10 = TextStyle(
+      fontSize: 10, fontFamily: 'Inter-Regular', color: AppColors.grey);
+  static const regularDarkGrey14 = TextStyle(
+      fontSize: 14, fontFamily: 'Inter-Regular', color: AppColors.darkGrey);
 }

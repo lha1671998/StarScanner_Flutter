@@ -6,6 +6,8 @@ import 'package:star_scanner/utils/app_colors.dart';
 import 'package:star_scanner/utils/app_text_styles.dart';
 import 'package:star_scanner/utils/constants.dart';
 
+bool toggle = true;
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -32,42 +34,146 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
-        appBar: AppBar(
-            title: const Text(
-              'Star Scanner',
-              style: AppTextStyles.semiBoldTeal24,
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            automaticallyImplyLeading: false),
         body: PageStorage(
           bucket: bucket,
           child: _currentScreen,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
-          margin: EdgeInsets.only(top: 100 * rate),
-          child: FloatingActionButton.extended(
-            onPressed: () {},
-            elevation: 8 * rate,
-            foregroundColor: AppColors.white,
-            label: const Text(
-              'SCAN',
-              style: AppTextStyles.mediumWhite14,
-            ),
-            backgroundColor: AppColors.tealPrimary,
-            icon: Icon(
-              Icons.add,
-              size: 20 * rate,
-            ),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          padding: EdgeInsets.only(bottom: 18 * rate),
+          child: Stack(
+            children: [
+              Visibility(
+                visible: !toggle,
+                child: Positioned.fill(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 61 * rate),
+                    color: Colors.black.withOpacity(0.2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 20 * rate),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16 * rate)),
+                          height: 100 * rate,
+                          width: 160 * rate,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.white,
+                              foregroundColor: AppColors.tealPrimary,
+                              minimumSize: Size(160 * rate, 50 * rate),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: () {
+                              _showAlertDialog(context);
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SvgPicture.asset(
+                                  Constants.cameraSVG,
+                                  height: 36 * rate,
+                                  width: 36 * rate,
+                                  fit: BoxFit.fill,
+                                  colorFilter: const ColorFilter.mode(
+                                      AppColors.tealPrimary, BlendMode.srcIn),
+                                ),
+                                const Text('Camera',
+                                    style: AppTextStyles.mediumTeal16),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 20 * rate),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16 * rate)),
+                          height: 100 * rate,
+                          width: 160 * rate,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.white,
+                              foregroundColor: AppColors.tealPrimary,
+                              minimumSize: Size(160 * rate, 50 * rate),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: () {
+                              _showAlertDialog(context);
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SvgPicture.asset(
+                                  Constants.gallerySVG,
+                                  height: 36 * rate,
+                                  width: 36 * rate,
+                                  fit: BoxFit.fill,
+                                  colorFilter: const ColorFilter.mode(
+                                      AppColors.tealPrimary, BlendMode.srcIn),
+                                ),
+                                const Text('Gallery',
+                                    style: AppTextStyles.mediumTeal16),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: toggle ? 46 * rate : 50 * rate,
+                  width: toggle ? 120 * rate : 107 * rate,
+                  decoration: BoxDecoration(
+                    color: AppColors.tealPrimary,
+                    borderRadius: BorderRadius.circular(toggle ? 10 : 1000),
+                  ),
+                  child: MaterialButton(
+                    splashColor: AppColors.tealLight,
+                    onPressed: () {
+                      setState(() {
+                        if (toggle) {
+                          toggle = !toggle;
+                        } else {
+                          toggle = !toggle;
+                        }
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          toggle ? Icons.add : Icons.close,
+                          color: AppColors.white,
+                          size: toggle ? 24 * rate : 30 * rate,
+                        ),
+                        Text(
+                          toggle ? 'SCAN' : '',
+                          style: toggle ? AppTextStyles.mediumWhite14 : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         bottomNavigationBar: BottomAppBar(
           color: AppColors.tealLight,
           child: Container(
-            height: 100 * rate,
+            margin: EdgeInsets.only(left: 35 * rate, right: 35 * rate),
+            height: 80 * rate,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     MaterialButton(
-                      minWidth: 140 * rate,
+                      minWidth: 60 * rate,
                       onPressed: () {
                         setState(() {
                           _currentScreen = const DocumentScreen();
@@ -114,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MaterialButton(
-                      minWidth: 140 * rate,
+                      minWidth: 60 * rate,
                       onPressed: () {
                         setState(() {
                           _currentScreen = const SettingScreen();
@@ -154,6 +260,26 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alert Title'),
+          content: const Text('This is the content of the alert.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

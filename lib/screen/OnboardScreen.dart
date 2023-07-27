@@ -37,6 +37,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
               width: widthDevice,
             ),
             Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               child: content(rate, rateHeight),
             ),
           ],

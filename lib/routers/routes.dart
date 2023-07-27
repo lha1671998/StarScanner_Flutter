@@ -6,4 +6,5 @@ class RoutePaths {
   static const String onboardRoute = '/onboard';
   static const String settingRoute = '/setting';
   static const String documentRoute = '/document';
+  static const String fabRoute = '/fab';
 }

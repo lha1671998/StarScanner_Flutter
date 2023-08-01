@@ -14,7 +14,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -55,23 +54,46 @@ class _SettingScreenState extends State<SettingScreen> {
               width: widthDevice,
             ),
             Container(
-              padding: EdgeInsets.only(bottom: 20 * rate),
-              decoration: const BoxDecoration(
-                color: AppColors.white
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    settingComponent(Constants.cropSVG, 'Allow gallery photo editing', value, onChanged, rate, true),
-                    settingComponent(Constants.cameraSVG, 'Start camera at start up', value, onChanged, rate, true),
-                    settingComponent(Constants.binSVG, 'Confirm on swipe delete', value, onChanged, rate, true),
-                    settingComponent(Constants.sendSVG, 'Show walkthrough at launch', value, onChanged, rate, true),
-                    settingComponent(Constants.policySVG, 'Privacy Policy', value, onChanged, rate, false),
-                    settingComponent(Constants.termsSVG, 'Terms & Conditions', value, onChanged, rate, false)
-                  ],
-                ),
-              )
-            ),
+                // padding: EdgeInsets.only(bottom: 20 * rate),
+                decoration: const BoxDecoration(color: AppColors.white),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      settingComponent(
+                          Constants.cropSVG,
+                          'Allow gallery photo editing',
+                          value,
+                          onChanged,
+                          rate,
+                          true),
+                      settingComponent(
+                          Constants.cameraSVG,
+                          'Start camera at start up',
+                          value,
+                          onChanged,
+                          rate,
+                          true),
+                      settingComponent(
+                          Constants.binSVG,
+                          'Confirm on swipe delete',
+                          value,
+                          onChanged,
+                          rate,
+                          true),
+                      settingComponent(
+                          Constants.sendSVG,
+                          'Show walkthrough at launch',
+                          value,
+                          onChanged,
+                          rate,
+                          true),
+                      settingComponent(Constants.policySVG, 'Privacy Policy',
+                          value, onChanged, rate, false),
+                      settingComponent(Constants.termsSVG, 'Terms & Conditions',
+                          value, onChanged, rate, false)
+                    ],
+                  ),
+                )),
           ],
         ),
       ),
@@ -82,14 +104,14 @@ class _SettingScreenState extends State<SettingScreen> {
       Function onChanged, double rate, bool displaySwitch) {
     return Container(
       alignment: Alignment.center,
-      margin:
-          EdgeInsets.only(left: 15 * rate, right: 15 * rate, top: 10 * rate),
+      margin: EdgeInsets.only(
+          left: 15 * rate, right: 15 * rate, top: 10 * rate, bottom: 10 * rate),
       padding: EdgeInsets.only(
           left: 16 * rate, right: 16 * rate, top: 24 * rate, bottom: 24 * rate),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          width: 1,
+          width: 1 * rate,
           color: Colors.teal.shade50,
         ),
         boxShadow: const [

@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.QUERY_ALL_PACKAGES"/>
+
     <application
         android:label="StarScanner"
         android:name="${applicationName}"
@@ -30,4 +36,11 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE"/>
+        </intent>
+    </queries>
+
 </manifest>

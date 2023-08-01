@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:star_scanner/screen/DocumentScreen.dart';
 import 'package:star_scanner/screen/SettingScreen.dart';
 import 'package:star_scanner/utils/app_colors.dart';
@@ -25,6 +28,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final PageStorageBucket bucket = PageStorageBucket();
   Widget _currentScreen = const DocumentScreen();
+
+  File? image;
+  Future pickImage(source) async {
+    final image = await ImagePicker().pickImage(source: source);
+    if (image == null) return;
+
+    final imageTemporary = File(image.path);
+    setState(() {
+      this.image = imageTemporary;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             onPressed: () {
-                              _showAlertDialog(context);
+                              pickImage(ImageSource.camera);
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -104,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             onPressed: () {
-                              _showAlertDialog(context);
+                              pickImage(ImageSource.gallery);
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -27,6 +27,10 @@ class AppTextStyles {
       fontSize: 16, fontFamily: 'Inter-Regular', color: AppColors.grey);
   static const regularGrey10 = TextStyle(
       fontSize: 10, fontFamily: 'Inter-Regular', color: AppColors.grey);
+  static const regularDarkGrey10 = TextStyle(
+      fontSize: 10, fontFamily: 'Inter-Regular', color: AppColors.darkGrey);
+  static const regularTealPrimary10 = TextStyle(
+      fontSize: 10, fontFamily: 'Inter-Regular', color: AppColors.tealPrimary);
   static const regularDarkGrey14 = TextStyle(
       fontSize: 14, fontFamily: 'Inter-Regular', color: AppColors.darkGrey);
   static const regularDarkGrey12 = TextStyle(

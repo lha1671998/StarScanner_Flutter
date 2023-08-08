@@ -15,4 +15,5 @@ class Constants {
   static const String sendSVG = 'assets/images/send.svg';
   static const String policySVG = 'assets/images/policy.svg';
   static const String termsSVG = 'assets/images/terms.svg';
+  static const String editSVG = 'assets/images/edit.svg';
 }

@@ -1,5 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:star_scanner/bloc/documents/documents_bloc.dart';
+import 'package:star_scanner/bloc/documents/documents_event.dart';
+import 'package:star_scanner/bloc/documents/documents_state.dart';
 
 import '../models/documents.dart';
 import '../utils/app_colors.dart';
@@ -14,101 +21,6 @@ class DocumentScreen extends StatefulWidget {
 }
 
 class _DocumentScreenState extends State<DocumentScreen> {
-  List<String> docArray = ['a'];
-
-  final List<Documents> docLists = [
-    Documents(
-        id: 1,
-        image: 'assets/images/burger.png',
-        name: 'Documents 1',
-        date: 'Today',
-        page: 1),
-    Documents(
-        id: 2,
-        image: 'assets/images/cheese_dip.png',
-        name: 'Documents 2',
-        date: 'Yesterday',
-        page: 2),
-    Documents(
-        id: 3,
-        image: 'assets/images/cola.png',
-        name: 'Documents 3',
-        date: 'the other day',
-        page: 3),
-    Documents(
-        id: 4,
-        image: 'assets/images/fries.png',
-        name: 'Documents 4',
-        date: '26/12/2023',
-        page: 4),
-    Documents(
-        id: 5,
-        image: 'assets/images/ice_cream.png',
-        name: 'Documents 5',
-        date: '24/12/2023',
-        page: 5),
-    Documents(
-        id: 6,
-        image: 'assets/images/noodles.png',
-        name: 'Documents 6',
-        date: '20/12/2023',
-        page: 6),
-    Documents(
-        id: 7,
-        image: 'assets/images/pizza.png',
-        name: 'Documents 7',
-        date: '18/12/2023',
-        page: 7),
-    Documents(
-        id: 8,
-        image: 'assets/images/sandwich.png',
-        name: 'Documents 8',
-        date: '16/12/2023',
-        page: 8),
-    Documents(
-        id: 9,
-        image: 'assets/images/wrap.png',
-        name: 'Documents 9',
-        date: '14/12/2023',
-        page: 9),
-    Documents(
-        id: 10,
-        image: 'assets/images/burger.png',
-        name: 'Documents 10',
-        date: '12/12/2023',
-        page: 10),
-    Documents(
-        id: 11,
-        image: 'assets/images/wrap.png',
-        name: 'Documents 11',
-        date: '14/12/2023',
-        page: 11),
-    Documents(
-        id: 12,
-        image: 'assets/images/wrap.png',
-        name: 'Documents 12',
-        date: '14/12/2023',
-        page: 12),
-    Documents(
-        id: 13,
-        image: 'assets/images/wrap.png',
-        name: 'Documents 13',
-        date: '14/12/2023',
-        page: 13),
-    Documents(
-        id: 14,
-        image: 'assets/images/wrap.png',
-        name: 'Documents 14',
-        date: '14/12/2023',
-        page: 14),
-    Documents(
-        id: 15,
-        image: 'assets/images/wrap.png',
-        name: 'Documents 15',
-        date: '14/12/2023',
-        page: 15),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -134,9 +46,22 @@ class _DocumentScreenState extends State<DocumentScreen> {
             Container(
               height: heightDevice,
               width: widthDevice,
-              child: docArray.isEmpty
-                  ? noDocument(widthDevice, heightDevice, rate)
-                  : content(widthDevice, heightDevice, rate, context),
+              child: BlocBuilder<DocumentsBloc, DocumentState>(
+                builder: (context, state) {
+                  if (state is LoadedState) {
+                    return content(
+                        widthDevice,
+                        heightDevice,
+                        rate,
+                        context,
+                        state
+                            .docLists); // Giao diện khi trạng thái là LoadedState
+                  } else {
+                    return noDocument(widthDevice, heightDevice,
+                        rate); // Giao diện khi trạng thái là InitialState
+                  }
+                },
+              ),
             ),
           ],
         ),
@@ -145,7 +70,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   }
 
   Widget content(double widthDevice, double heightDevice, double rate,
-      BuildContext context) {
+      BuildContext context, List<Documents> docLists) {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -212,8 +137,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Image.asset(
-                                      itemDoc.image,
+                                    Image.file(
+                                      File(itemDoc.image.path),
                                       height: 121 * rate,
                                       width: 224 * rate,
                                       fit: BoxFit.fill,
@@ -290,82 +215,161 @@ class _DocumentScreenState extends State<DocumentScreen> {
                           itemCount: docLists.length,
                           itemBuilder: (context, index) {
                             final itemDoc = docLists[index];
-                            return Container(
-                              margin: EdgeInsets.only(bottom: 16 * rate),
-                              padding: EdgeInsets.only(
-                                  left: 16 * rate, right: 16 * rate),
-                              height: 100 * rate,
-                              width: 342 * rate,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  width: 1 * rate,
-                                  color: Colors.teal.shade50,
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(255, 255, 255, 0.25),
-                                    offset: Offset(0, 0),
-                                    blurRadius: 1,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                            return Slidable(
+                              key: Key('$itemDoc'),
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
                                 children: [
-                                  Material(
-                                    elevation: 4,
-                                    // The elevation value to control the shadow intensity// Optional: Add rounded corners to the container
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(0, 150, 136,
-                                            0.05), // You can set a background color if needed
-                                      ),
-                                      child: Image.asset(
-                                        itemDoc.image,
-                                        height: 70 * rate,
-                                        width: 50 * rate,
-                                        fit: BoxFit.fill,
+                                  SizedBox(width: 10 * rate),
+                                  SizedBox(
+                                    height: 100 * rate,
+                                    width: 85 * rate,
+                                    child: CustomSlidableAction(
+                                      borderRadius: BorderRadius.circular(12),
+                                      onPressed: (context) {
+                                        setState(() {});
+                                      },
+                                      backgroundColor: AppColors.greyLight,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            Constants.editSVG,
+                                            alignment: Alignment.centerRight,
+                                            fit: BoxFit.fill,
+                                            width: 24,
+                                            height: 24,
+                                            colorFilter: const ColorFilter.mode(
+                                                AppColors.tealPrimary,
+                                                BlendMode.srcIn),
+                                          ),
+                                          SizedBox(height: 8 * rate),
+                                          const Text(
+                                            'Rename',
+                                            style: AppTextStyles
+                                                .regularTealPrimary10,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 16 * rate),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 200 * rate,
-                                        child: Text(itemDoc.name,
+                                  SizedBox(width: 10 * rate),
+                                  SizedBox(
+                                    height: 100 * rate,
+                                    width: 85 * rate,
+                                    child: CustomSlidableAction(
+                                      borderRadius: BorderRadius.circular(12),
+                                      onPressed: (context) {
+                                        context.read<DocumentsBloc>().add(
+                                            RemoveDocumentEvent(itemDoc.id));
+                                      },
+                                      backgroundColor: AppColors.pinkLight,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            Constants.binSVG,
+                                            alignment: Alignment.centerRight,
+                                            fit: BoxFit.fill,
+                                            width: 24,
+                                            height: 24,
+                                            colorFilter: const ColorFilter.mode(
+                                                AppColors.black,
+                                                BlendMode.srcIn),
+                                          ),
+                                          SizedBox(height: 8 * rate),
+                                          const Text(
+                                            'Delete',
                                             style:
-                                                AppTextStyles.mediumDarkGrey14),
+                                                AppTextStyles.regularDarkGrey10,
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(height: 10 * rate),
-                                      SizedBox(
-                                        width: 260 * rate,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              itemDoc.date,
-                                              style: AppTextStyles
-                                                  .regularGreySemi12,
-                                            ),
-                                            Text(
-                                              '${itemDoc.page} page',
-                                              style: AppTextStyles
-                                                  .regularDarkGrey12,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
                                 ],
+                              ),
+                              child: Container(
+                                margin:
+                                    EdgeInsets.symmetric(vertical: 6 * rate),
+                                padding: EdgeInsets.only(
+                                    left: 16 * rate, right: 16 * rate),
+                                height: 100 * rate,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    width: 1 * rate,
+                                    color: Colors.teal.shade50,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color:
+                                          Color.fromRGBO(255, 255, 255, 0.25),
+                                      offset: Offset(0, 0),
+                                      blurRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Material(
+                                      elevation: 4,
+                                      // The elevation value to control the shadow intensity// Optional: Add rounded corners to the container
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Color.fromRGBO(0, 150, 136,
+                                              0.05), // You can set a background color if needed
+                                        ),
+                                        child: Image.file(
+                                          File(itemDoc.image.path),
+                                          height: 70 * rate,
+                                          width: 50 * rate,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 16 * rate),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 200 * rate,
+                                          child: Text(itemDoc.name,
+                                              style: AppTextStyles
+                                                  .mediumDarkGrey14),
+                                        ),
+                                        SizedBox(height: 10 * rate),
+                                        SizedBox(
+                                          width: 260 * rate,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                itemDoc.date,
+                                                style: AppTextStyles
+                                                    .regularGreySemi12,
+                                              ),
+                                              Text(
+                                                '${itemDoc.page} page',
+                                                style: AppTextStyles
+                                                    .regularDarkGrey12,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },

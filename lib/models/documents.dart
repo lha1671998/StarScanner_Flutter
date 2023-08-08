@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
 class Documents {
   late int id;
-  late String image;
+  XFile image;
   late String name;
   late String date;
   late int page;
